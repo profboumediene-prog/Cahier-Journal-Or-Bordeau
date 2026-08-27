@@ -16,7 +16,7 @@
 
 <script>
   const firebaseConfig = {
-    apiKey: "AIzaSyCEs9ECiK8B5sBa5t-8ige1UipR2UeV_T0",
+    apiKey: "AiZaSyCES9EcIK8B5S5Ba5t-8ige1UiPR2Uev_T0",
     authDomain: "cahier-journal-26-27.firebaseapp.com",
     projectId: "cahier-journal-26-27",
     storageBucket: "cahier-journal-26-27.firebasestorage.app",
@@ -24,6 +24,7 @@
     appId: "1:640606456487:web:8444d7761c7cc15519a982",
     measurementId: "G-QVFVEP32NS"
   };
+  
   firebase.initializeApp(firebaseConfig);
 
   // Vérification de la session utilisateur
@@ -41,42 +42,161 @@
   function connexionFirebase() {
     const email = document.getElementById('user-email').value;
     const code = document.getElementById('user-code').value;
+    const errorElement = document.getElementById('error-message');
+    errorElement.innerText = '';
+
+    if (!email || !code) {
+      errorElement.innerText = "Veuillez remplir tous les champs.";
+      return;
+    }
 
     firebase.auth().signInWithEmailAndPassword(email, code)
+      .then((userCredential) => {
+        // Connexion réussie
+      })
       .catch((error) => {
-        alert("Accès refusé : e-mail ou code d'accès incorrect !");
+        errorElement.innerText = "Adresse e-mail ou code d'accès incorrect.";
       });
+  }
+
+  // Fonction de déconnexion
+  function deconnexionFirebase() {
+    firebase.auth().signOut().then(() => {
+      window.location.reload();
+    });
   }
 </script>
 
 <style>
 /* =====================================================================
+   STYLE DE L'INTERFACE DE CONNEXION AGRANDIE (BORDEAUX & OR)
+   ===================================================================== */
+#zone-connexion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 50% -10%, #591b28 0%, transparent 60%), #1a060a;
+  font-family: "Manrope", sans-serif;
+  padding: 20px;
+}
+
+.login-card-large {
+  background: #ffffff;
+  border: 2px solid #d4af37;
+  border-radius: 20px;
+  padding: 45px 40px;
+  width: 100%;
+  max-width: 520px; /* Interface plus large */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.login-card-large h2 {
+  font-family: "Cormorant Garamond", serif;
+  color: #42151e;
+  font-size: 32px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.login-card-large p.sub {
+  color: #705e61;
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+.form-group-large {
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.form-group-large label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #591b28;
+  margin-bottom: 8px;
+}
+
+.form-group-large input {
+  width: 100%;
+  padding: 14px 16px; /* Champs plus grands */
+  font-size: 16px;
+  border: 1.5px solid #e6d3d6;
+  border-radius: 12px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  background-color: #fcf4f5;
+}
+
+.form-group-large input:focus {
+  border-color: #8c293e;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(140, 41, 62, 0.15);
+}
+
+.btn-login-large {
+  width: 100%;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #591b28, #8c293e);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(89, 27, 40, 0.35);
+  transition: transform 0.15s ease, background 0.15s ease;
+  margin-top: 10px;
+}
+
+.btn-login-large:hover {
+  background: linear-gradient(135deg, #42151e, #732233);
+  transform: translateY(-2px);
+}
+
+.btn-logout {
+  background: #931b31 !important;
+  color: white !important;
+  border: none !important;
+}
+
+#error-message {
+  color: #d93838;
+  font-size: 14px;
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+/* =====================================================================
    CAHIER JOURNAL — FRANÇAIS / SECONDAIRE (Algérie)
    Feuille de style unique — écran + impression A4
-   Palette : encre indigo, violet royal, lilas, or antique, rose poudré, sauge
+   Thème : Bordeaux & Or (Ambiance Académique & Prestigieuse)
    Typographie : Cormorant Garamond (titres) / Manrope (texte) / Parisienne (accent)
    ===================================================================== */
 
 :root{
-  --ink:#241c46;
-  --v900:#2e2359;
-  --v800:#3b2d73;
-  --v700:#4b3b8f;
-  --v600:#5d4bab;
-  --v500:#7663c6;
-  --v400:#9585db;
-  --v300:#b8aae9;
-  --v200:#d9d1f6;
-  --v100:#ece7fb;
-  --v50:#f6f3fe;
-  --gold:#a8863a;
-  --gold-soft:#e3d2a6;
-  --rose:#c2789f;
-  --rose-soft:#f6dde8;
-  --sage:#a9c3a2;
-  --muted:#635f7d;
-  --line:#ded6f4;
-  --paper:#ffffff;
+  --ink:#2a1619;       /* Noir bordeaux très sombre pour le texte */
+  --v900:#42151e;      /* Bordeaux le plus profond */
+  --v800:#591b28;      /* Bordeaux sombre */
+  --v700:#732233;      /* Bordeaux riche / brique soutenue */
+  --v600:#8c293e;      /* Bordeaux moyen (accents, boutons, italiques) */
+  --v500:#a33b52;      /* Bordeaux clair */
+  --v400:#c2697e;      /* Rose bordeaux atténué */
+  --v300:#d99aa9;      /* Rose bordeaux clair (pointillés) */
+  --v200:#eecad3;      /* Crème rosé (bordures douces) */
+  --v100:#f6e1e6;      /* Crème bordeaux (fonds tableaux) */
+  --v50:#fcf4f5;       /* Blanc cassé très légèrement rosé */
+  --gold:#d4af37;      /* Or lumineux / ambre */
+  --gold-soft:#ebd69b; /* Or doux / ambre clair */
+  --rose:#a8485c;      /* Rouge brique/rose (accents secondaires) */
+  --rose-soft:#f2dadd;
+  --sage:#a8a07c;      /* Or vieilli / bronze */
+  --muted:#705e61;     /* Gris brun chaud (textes secondaires) */
+  --line:#e6d3d6;
+  --paper:#fffffb;     /* Blanc cassé / crème pour la feuille A4 */
 
   --display:"Cormorant Garamond","Times New Roman",serif;
   --body:"Manrope","Segoe UI",system-ui,sans-serif;
@@ -92,8 +212,8 @@ body{
   font-family:var(--body);
   color:var(--ink);
   background:
-    radial-gradient(1200px 600px at 50% -10%, #efeaff 0%, transparent 60%),
-    #eceaf4;
+    radial-gradient(1200px 600px at 50% -10%, #591b28 0%, transparent 60%),
+    #1a060a; /* Fond d'écran riche, coloré et immersif aux tons bordeaux sombres */
   -webkit-print-color-adjust:exact;
   print-color-adjust:exact;
   padding:18px 0 40px;
@@ -106,7 +226,7 @@ p{margin:0}
   max-width:210mm;margin:0 auto 22px;padding:14px 16px;
   background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
   border:1px solid var(--v200);border-radius:16px;
-  box-shadow:0 12px 30px -18px rgba(43,29,94,.55);
+  box-shadow:0 12px 30px -18px rgba(42, 10, 18, 0.7);
 }
 .toolbar__top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
   padding-bottom:11px;border-bottom:1px solid var(--v100)}
@@ -127,8 +247,8 @@ p{margin:0}
   box-shadow:0 8px 16px -10px var(--v700)}
 .btn--primary:hover{background:linear-gradient(135deg,var(--v900),var(--v700))}
 .btn--ghost{background:transparent}
-.btn--danger{color:#9b2c4b;border-color:#f0d3dc}
-.btn--danger:hover{background:#fdf2f6}
+.btn--danger{color:#931b31;border-color:#f4d7dd}
+.btn--danger:hover{background:#fbe9ec}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;padding-top:11px;align-items:center}
 .tabs__label{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v400);margin-right:4px}
 .tab{
@@ -149,13 +269,17 @@ p{margin:0}
   font-size:10pt;
 }
 @media screen{
-  .sheet{margin:0 auto 26px;border-radius:12px;box-shadow:0 24px 50px -30px rgba(36,23,86,.55),0 0 0 1px rgba(36,23,86,.06)}
+  .sheet{margin:0 auto 26px;border-radius:12px;box-shadow:0 24px 50px -30px rgba(10,2,5,.85),0 0 0 1px rgba(20,5,10,.3)}
 }
 .sheet.hidden{display:none}
 
+/* Filet décoratif de page */
 .sheet::before{
-  content:"";position:absolute;inset:5mm;border:1px solid var(--v300);border-radius:2px;pointer-events:none;
-  box-shadow:0 0 0 3.2px #fff, 0 0 0 4px var(--v100);
+  content:"";position:absolute;inset:5mm;border:1px solid var(--v100);border-radius:8px;pointer-events:none;
+}
+.sheet::after{
+  content:"";position:absolute;left:5mm;top:5mm;width:26mm;height:1.6mm;
+  background:linear-gradient(90deg,var(--v700),var(--v300));border-radius:2px;
 }
 .sheet > *{position:relative;z-index:1}
 
@@ -172,7 +296,7 @@ p{margin:0}
 
 /* ------------------------------ CARTES ------------------------------ */
 .card{
-  position:relative;border:1px solid var(--v200);border-radius:11px;background:linear-gradient(180deg,#fff, #fdfcff);
+  position:relative;border:1px solid var(--v200);border-radius:11px;background:linear-gradient(180deg,var(--paper), #fdfbfa);
   padding:6.5mm 4.5mm 4mm;
 }
 .card--tight{padding:5mm 4mm 3mm}
@@ -217,7 +341,7 @@ p{margin:0}
 .chks{display:flex;flex-wrap:wrap;gap:3px 10px}
 
 /* ------------------------------ TABLEAUX ------------------------------ */
-.tbl-wrap{border:1px solid var(--v200);border-radius:11px;overflow:hidden;background:#fff}
+.tbl-wrap{border:1px solid var(--v200);border-radius:11px;overflow:hidden;background:var(--paper)}
 table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .tbl thead th{
   background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;
@@ -233,9 +357,10 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .tbl td .line{border-bottom-color:var(--v200)}
 .slot{font-size:8pt;font-weight:700;color:var(--v800);text-align:center;line-height:1.2}
 .slot small{display:block;font-weight:500;color:var(--v400);font-size:7pt}
-.pause td{background:repeating-linear-gradient(135deg,var(--v50),var(--v50) 6px,#fff 6px,#fff 12px);
+.pause td{background:repeating-linear-gradient(135deg,var(--v50),var(--v50) 6px,var(--paper) 6px,var(--paper) 12px);
   text-align:center;font-size:7.5pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--v400)}
 
+/* Tableau dense (liste des élèves) */
 .tbl--dense tbody td{padding:.4mm .6mm}
 .tbl--dense thead th{
   padding:1.3mm .8mm;font-size:6.4pt;font-weight:500;letter-spacing:.01em;
@@ -245,9 +370,10 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .tbl--dense .line{padding:0 2px;line-height:1.25}
 .line--moy{font-weight:800;color:var(--v700)}
 
+/* Grille façon « planner » (page emploi du temps hebdomadaire) */
 .planner td{padding:1.2mm}
 .planner .cell{
-  border:1px solid var(--v200);border-radius:6px;background:#fff;height:100%;width:100%;
+  border:1px solid var(--v200);border-radius:6px;background:var(--paper);height:100%;width:100%;
   padding:1mm;resize:none;outline:none;border-color:var(--v200);
   font:600 8pt/3.4mm var(--body);color:var(--v800);text-align:center}
 .planner .cell:focus{border-color:var(--v500);background:var(--v50)}
@@ -263,7 +389,7 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
   font-size:7.5pt;font-weight:700}
 .chip b{color:var(--gold);font-weight:800}
 .chip--gold{background:#fdfaf1;border-color:var(--gold-soft);color:#6c5518}
-.chip--rose{background:#fdf5f9;border-color:var(--rose-soft);color:#7d3f5c}
+.chip--rose{background:#fcf4f5;border-color:var(--rose-soft);color:var(--v700)}
 .chip--rose b{color:var(--rose)}
 .chip small{font-weight:600;color:var(--muted)}
 
@@ -273,6 +399,7 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .sign p{font-size:8.5pt;font-weight:700;color:var(--v800);margin-bottom:1mm}
 .sign div{height:13mm;border-bottom:1px dotted var(--v300)}
 
+/* Neutralisation du style « tableau » dans le planner */
 .planner tbody td{border:0;padding:0}
 .planner tbody tr{background:transparent!important}
 .planner thead th{border-right:0}
@@ -289,12 +416,13 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 /* ------------------------------ PAGE DE GARDE ------------------------------ */
 .cover{
   background:
-    radial-gradient(70% 45% at 50% 0%, #f3efff 0%, transparent 65%),
-    radial-gradient(60% 40% at 50% 100%, #f6f2ff 0%, transparent 60%),
-    #fff;
+    radial-gradient(70% 45% at 50% 0%, #faeed1 0%, transparent 65%),
+    radial-gradient(60% 40% at 50% 100%, #f6e1e6 0%, transparent 60%),
+    var(--paper);
   text-align:center;justify-content:space-between;padding:14mm 14mm 12mm;
 }
-.cover::before{inset:7mm;border:1.5px solid var(--v200);border-radius:10px;box-shadow:0 0 0 3.6px #fff, 0 0 0 4.6px var(--v100)}
+.cover::before{inset:7mm;border:1.5px solid var(--v200);border-radius:10px}
+.cover::after{display:none}
 .cover__frame{position:absolute;inset:9.5mm;border:1px solid var(--v100);border-radius:7px;pointer-events:none}
 .cover__rep{font-size:10pt;font-weight:700;letter-spacing:.02em;color:var(--v900)}
 .cover__min{font-size:9pt;color:var(--muted);margin-top:1.5mm}
@@ -303,13 +431,13 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .cover__script{font-family:var(--script);font-size:22pt;color:var(--gold);margin-top:2mm}
 .cover__kicker{
   display:inline-flex;align-items:center;gap:8px;margin-top:4mm;padding:2mm 5mm;border-radius:999px;
-  border:1px solid var(--v200);background:#fff;
+  border:1px solid var(--v200);background:var(--paper);
   font-size:8.5pt;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--v700)}
 .eiffel{width:52mm;height:85.8mm;color:var(--v700);display:block;margin:0 auto}
 .eiffel .glow{color:var(--gold)}
 .cover__art{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:6mm}
 .cover__art .halo{position:absolute;width:78mm;height:78mm;border-radius:50%;
-  background:radial-gradient(circle,#efe9ff 0%,rgba(255,255,255,0) 70%);bottom:-6mm;z-index:0}
+  background:radial-gradient(circle,#fcf2da 0%,rgba(255,255,255,0) 70%);bottom:-6mm;z-index:0}
 .cover__art .eiffel{position:relative;z-index:1}
 .cover__fields{display:grid;gap:3.5mm;max-width:130mm;margin:0 auto;text-align:left}
 .cover__fields .field > label{font-size:9.5pt}
@@ -370,6 +498,10 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .task input[type="checkbox"]{width:12px;height:12px;flex:none;margin:0;accent-color:var(--v600);cursor:pointer}
 .task .line{border-bottom-style:dotted}
 
+/* ------------------------ ORNEMENTS ------------------------
+   Papillons discrets : dessins vectoriels posés SOUS le contenu (z-index 0)
+   pour ne jamais gêner l'écriture.
+   ------------------------------------------------------------------ */
 .sheet > .orn{position:absolute;z-index:0;pointer-events:none;display:block}
 .orn--fly1{width:13mm;height:9.8mm;top:15mm;right:14mm;opacity:.95}
 .orn--fly2{width:10mm;height:7.5mm;bottom:17mm;left:11mm;opacity:.85;transform:scaleX(-1)}
@@ -399,13 +531,13 @@ body.exporting .no-print{display:none!important}
 body.exporting .sheet{
   margin:0!important;border-radius:0!important;box-shadow:none!important;
   page-break-before:always;break-before:page;page-break-inside:avoid;break-inside:avoid}
-body.exporting .sheet.is-first{page-break-before:auto;break-before:auto}
 body.exporting .line,body.exporting .area,body.exporting .cell{background-color:transparent!important}
+/* Repli : aucun dégradé, uniquement des aplats — capture toujours possible */
 body.exporting-flat *,body.exporting-flat *::before,body.exporting-flat *::after{background-image:none!important}
 body.exporting-flat .tbl thead th,body.exporting-flat .card__label,
-body.exporting-flat .cover__year,body.exporting-flat .planner .vslot{background-color:#4b3b8f!important;color:#fff!important}
-body.exporting-flat .sheet::after{background-color:#4b3b8f!important}
-body.exporting-flat .rowhead,body.exporting-flat .num,body.exporting-flat .pause td{background-color:#ece7fb!important}
+body.exporting-flat .cover__year,body.exporting-flat .planner .vslot{background-color:#732233!important;color:#fff!important}
+body.exporting-flat .sheet::after{background-color:#732233!important}
+body.exporting-flat .rowhead,body.exporting-flat .num,body.exporting-flat .pause td{background-color:#f6e1e6!important}
 body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!important}
 .btn[disabled]{opacity:.55;cursor:progress}
 .pdf-echo{background-color:transparent}
@@ -413,22 +545,29 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
 </head>
 <body>
 
-  <!-- Écran de restriction Firebase -->
-  <div id="zone-connexion" style="text-align: center; padding: 60px 20px; font-family: sans-serif; min-height: 80vh;">
-    <h2>Accès restreint — Cahier Journal Numérique</h2>
-    <p style="margin-bottom: 24px; color: #555;">Veuillez saisir vos identifiants d'accès pour déverrouiller votre document.</p>
+<!-- ===================== ZONE DE CONNEXION FIREBASE ===================== -->
+<div id="zone-connexion">
+  <div class="login-card-large">
+    <h2>Cahier Journal 2026-2027</h2>
+    <p class="sub">Accès sécurisé pour professeur de français</p>
     
-    <div style="max-width: 320px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;">
-      <input type="email" id="user-email" placeholder="Adresse e-mail" style="padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
-      <input type="password" id="user-code" placeholder="Code d'accès" style="padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
-      <button onclick="connexionFirebase()" style="padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; background-color: #4285F4; color: white; border: none; border-radius: 6px;">
-        Se connecter
-      </button>
+    <div class="form-group-large">
+      <label for="user-email">Adresse e-mail :</label>
+      <input type="email" id="user-email" placeholder="votre-email@domaine.com">
     </div>
+    
+    <div class="form-group-large">
+      <label for="user-code">Code d'accès :</label>
+      <input type="password" id="user-code" placeholder="Entrez votre code">
+    </div>
+    
+    <button class="btn-login-large" onclick="connexionFirebase()">Se connecter</button>
+    <div id="error-message"></div>
   </div>
+</div>
 
-  <!-- Début du Cahier Journal protégé -->
-  <div id="zone-protegee" style="display: none;">
+<!-- ===================== CONTENU DU CAHIER JOURNAL ===================== -->
+<div id="zone-protegee" style="display:none;">
 
 <!-- ===================== BARRE D'OUTILS (non imprimée) ===================== -->
 <header class="toolbar no-print">
@@ -450,6 +589,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
       <button class="btn btn--danger" type="button" onclick="clearAll()">Tout effacer</button>
       <button class="btn" type="button" onclick="printCurrent()">Imprimer cette page</button>
       <button class="btn" type="button" onclick="printAll()">Imprimer le cahier</button>
+      <button class="btn btn-logout" type="button" onclick="deconnexionFirebase()">Déconnexion</button>
     </div>
   </div>
   <nav class="tabs" aria-label="Navigation entre les pages">
@@ -1126,7 +1266,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   </div>
 
   <div style="display:flex;align-items:flex-end;gap:5mm;margin-top:2.5mm">
-    <p class="note" style="flex:1">Note continue = (P + D + E + I x 2 + T + C) / 7, sur les colonnes renseignées. Elle reste modifiable : votre saisie remplace alors le calcul.</p>
+    <p class="note" style="flex:1">Note continue = (P + D + E + I × 2 + T + C) ÷ 7, calculée sur les colonnes renseignées. Elle reste modifiable : votre saisie remplace alors le calcul.</p>
     <div class="field" style="width:30mm"><label for="ev_moy_cl">Moyenne classe :</label><input class="line line--c" type="text" id="ev_moy_cl"></div>
     <div class="field" style="width:26mm"><label for="ev_sup">Élèves ≥ 10 :</label><input class="line line--c" type="text" id="ev_sup"></div>
     <div class="field" style="width:52mm"><label for="ev_rem">Remédiation prévue :</label><input class="line" type="text" id="ev_rem"></div>
@@ -1260,16 +1400,24 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
 </section>
 
 </main>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* =====================================================================
    Cahier journal — logique de l'application
+   1. Construction des tableaux répétitifs
+   2. Navigation entre les pages
+   3. Sauvegarde locale (avec repli en mémoire si le stockage est bloqué)
+   4. Impression A4 / export PDF
+   5. Duplication de page
+   6. Papillons discrets (ornements)
    ===================================================================== */
 (function () {
   'use strict';
 
+  /* ---------- fabriques d'éléments ---------- */
   function input(id, cls, val) {
     var e = document.createElement('input');
     e.type = 'text'; e.className = 'line' + (cls ? ' ' + cls : ''); e.id = id;
@@ -1311,8 +1459,10 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   }
   function byId(id) { return document.getElementById(id); }
 
+  /* ---------- 1. tableaux ---------- */
   var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi'];
 
+  // Page 2 — grille jours x créneaux
   (function () {
     var tb = byId('edt-body'); if (!tb) return;
     DAYS.forEach(function (d, i) {
@@ -1322,6 +1472,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
+  // Page 3 — créneaux en lignes
   (function () {
     var tb = byId('tab-body'); if (!tb) return;
     var slots = ['08:00|09:00', '09:00|10:00', '10:00|11:00', '11:00|12:00', '13:00|14:00', '14:00|15:00', '15:00|16:00'];
@@ -1340,6 +1491,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
+  // Page 4 — planner hebdomadaire
   (function () {
     var tb = byId('planner-body'); if (!tb) return;
     var slots = ['8h - 9h', '9h - 10h', '10h - 11h', '11h - 12h', '13h - 14h', '14h - 15h', '15h - 16h', '16h - 17h'];
@@ -1362,6 +1514,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  // Page 5 — vacances / jours fériés
   (function () {
     var tb = byId('vac-body'); if (!tb) return;
     ['Vacances d\'automne', 'Vacances d\'hiver', 'Vacances de printemps', 'Vacances d\'été'].forEach(function (v, i) {
@@ -1381,6 +1534,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  // Page 6 — séminaires / journées pédagogiques
   (function () {
     var tb = byId('sem-body'); if (!tb) return;
     for (var i = 1; i <= 4; i++) {
@@ -1402,6 +1556,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  // Page 7 — cahier de textes
   (function () {
     var tb = byId('work-body'); if (!tb) return;
     for (var i = 1; i <= 12; i++) {
@@ -1414,6 +1569,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  // Page 8 — liste des élèves (36 lignes, moyenne calculée)
   (function () {
     var tb = byId('students-body'); if (!tb) return;
     for (var i = 1; i <= 36; i++) {
@@ -1437,6 +1593,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  /* ---------- moyenne trimestrielle & appréciation ---------- */
   var COEFS = { ec: 1, tp: 1, dev: 1, compo: 2 };
 
   function toNumber(v) {
@@ -1482,6 +1639,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     if (tr) computeRow(tr);
   });
 
+  // Page 9 — déroulement de la séance
   (function () {
     var tb = byId('phases-body'); if (!tb) return;
     var phases = [
@@ -1513,6 +1671,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
+  // Page 10 — planification hebdomadaire
   (function () {
     var tb = byId('plan-body'); if (!tb) return;
     for (var i = 1; i <= 10; i++) {
@@ -1525,6 +1684,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  // Page 11 — évaluation continue (28 lignes, note continue calculée)
   var EV_ROLES = ['part', 'dev', 'exo', 'int', 'cah', 'com'];
   (function () {
     var tb = byId('eval-body'); if (!tb) return;
@@ -1545,6 +1705,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
+  /* ---------- note d'évaluation continue ---------- */
   var EV_COEFS = { part: 1, dev: 1, exo: 1, int: 2, cah: 1, com: 1 };
 
   function computeEvalRow(tr) {
@@ -1569,6 +1730,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     if (tr) computeEvalRow(tr);
   });
 
+  // Page 12 — conseil de classe
   (function () {
     var tb = byId('cc-body'); if (!tb) return;
     var membres = [
@@ -1604,6 +1766,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
+  // Page 13 — calendrier du mois & tâches
   var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
               'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 
@@ -1683,6 +1846,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   });
 
+  /* ---------- 2. navigation ---------- */
   var current = 0;
   window.showPage = function (n) {
     current = n;
@@ -1695,7 +1859,8 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  var KEY = 'cahier_journal_fr_v2';
+  /* ---------- 3. sauvegarde ---------- */
+  var KEY = 'cahier_journal_fr_v1';
   var memory = null;
   function readStore() {
     try { return localStorage.getItem(KEY); } catch (e) { return memory; }
@@ -1755,6 +1920,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT') window.saveAll(true);
   });
 
+  /* ---------- 4. impression ---------- */
   function markFirst() {
     var sheets = document.querySelectorAll('.sheet');
     sheets.forEach(function (s) { s.classList.remove('is-first'); });
@@ -1767,6 +1933,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     setTimeout(function () { markFirst(); window.print(); }, 250);
   };
 
+  /* ---------- 4 bis. export PDF ---------- */
   function syncFields(root) {
     root.querySelectorAll('textarea').forEach(function (t) { t.textContent = t.value; });
     root.querySelectorAll('input[type="text"], input[type="email"]').forEach(function (i) {
@@ -1800,13 +1967,13 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
 
       if (el.type === 'checkbox') {
         st.display = 'inline-block';
-        st.borderWidth = '1px'; st.borderStyle = 'solid'; st.borderColor = '#5d4bab';
+        st.borderWidth = '1px'; st.borderStyle = 'solid'; st.borderColor = '#8c293e';
         st.borderRadius = '2px';
         st.textAlign = 'center';
         st.lineHeight = cs.height;
         st.fontSize = '9px';
         st.color = '#ffffff';
-        st.backgroundColor = el.checked ? '#5d4bab' : '#ffffff';
+        st.backgroundColor = el.checked ? '#8c293e' : '#ffffff';
         if (el.checked) echo.textContent = '\u2713';
       } else {
         var pt = parseFloat(cs.paddingTop) || 0;
@@ -1943,11 +2110,11 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     function fail(err) {
       console.error('Export PDF —', err);
       var detail = err && (err.message || err.name) ? ' (' + String(err.message || err.name).slice(0, 70) + ')' : '';
-      stop('Échec de la génération' + detail + '. Utilisez « Imprimer cette page » puis « Enregistrer au format PDF ».', true);
+      stop('Échec de la génération' + detail + '. Utilisez « Imprimer cette page » puis « Enregistrer au format PDF » : le résultat est même plus net.', true);
     }
 
     if (typeof html2pdf === 'undefined') {
-      stop('Générateur PDF non chargé : vérifiez la connexion internet.', true);
+      stop('Générateur PDF non chargé : vérifiez la connexion internet puis rechargez la page. Sinon, utilisez « Imprimer cette page ».', true);
       return;
     }
 
@@ -1960,7 +2127,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     btn.disabled = true; btn.textContent = '…';
 
     guard = setTimeout(function () {
-      stop('La génération a été interrompue au bout de 30 secondes.', true);
+      stop('La génération a été interrompue au bout de 30 secondes ; le cahier redevient utilisable. Essayez « Imprimer cette page » puis « Enregistrer au format PDF ».', true);
     }, 30000);
 
     var titre = (sheet.getAttribute('aria-label') || 'page').trim();
@@ -1999,6 +2166,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   }
 
+  /* ---------- 5. duplication de page ---------- */
   var clones = 0;
   window.duplicatePage = function (btn) {
     var src = btn.closest('.sheet');
@@ -2029,6 +2197,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     toast('Page supprimée.');
   };
 
+  /* ---------- notifications ---------- */
   var toastTimer = null;
   function toast(msg, longue) {
     var t = byId('toast');
@@ -2038,11 +2207,11 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     toastTimer = setTimeout(function () { t.classList.remove('is-on'); }, longue ? 9000 : 2600);
   }
 
+  /* ---------- 6. papillons (ornements) ---------- */
   var C = {
-    heart: '#ead9ab', heartLine: '#a8863a',
-    wing: '#efe9fd', wing2: '#f9dfeb', wingLine: '#9585db'
+    heart: '#f0c755', heartLine: '#9c730f',
+    wing: '#ffffff', wing2: '#f6e1e6', wingLine: '#732233'
   };
-
   function butterflyHTML(cls) {
     return '<svg class="orn ' + cls + '" viewBox="0 0 64 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' +
       '<g stroke="' + C.wingLine + '" stroke-width="1.3" stroke-linejoin="round">' +
@@ -2057,7 +2226,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
         '<path d="M32 14v18"/><path d="M32 14C30 9 27 6 23 4"/><path d="M32 14C34 9 37 6 41 4"/>' +
       '</g></svg>';
   }
-
   function addOrnaments() {
     document.querySelectorAll('.sheet').forEach(function (sheet) {
       if (sheet.querySelector('.orn')) return;
@@ -2066,6 +2234,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   }
 
+  /* ---------- exemple de remplissage ---------- */
   window.fillModel = function () {
     var m = {
       c_ens: 'Mme BENALI Souad', c_etab: 'Lycée Ibn Khaldoun', c_com: 'El Biar', c_wil: 'Alger',
@@ -2079,7 +2248,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
       i_form: 'ENS de Bouzaréah, Alger', i_annee: '2026 - 2027', i_horaire: '18 h / semaine',
       i_acc_nom: 'M. KHALDI Sofiane', i_acc_fonc: 'Professeur formateur', i_acc_tel: '05 50 12 34 56',
       i_insp: 'M. LAMRI Kamel', i_coord: 'Mme SAADI Nadia',
-      i_obs: 'Animation de l\'atelier d\'écriture et du club de lecture.',
+      i_obs: 'Animation de l\'atelier d\'écriture et du club de lecture. Intégration des TICE en compréhension de l\'oral.',
       e_etab: 'Lycée Ibn Khaldoun', e_annee: '2026 - 2027', e_ens: 'Mme BENALI Souad', e_classes: '3AS SE · 2AS L&Ph · 1AS TC L',
       edt_0_1: '3AS SE — S08', edt_0_2: '2AS L&Ph — S12', edt_0_3: '1AS TC L — S04', edt_1_1: '3AS SE — S08',
       t_etab: 'Lycée Ibn Khaldoun', t_ens: 'Mme BENALI Souad', t_dir: 'M. HAMDI Rachid',
@@ -2092,16 +2261,16 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
       fer_1_date: '01/11/2026', fer_1_jour: 'Dimanche', fer_1_nom: 'Fête de la Révolution', fer_1_obs: 'Exposé : le texte d\'histoire',
       v_c1: 'Du 29/11/2026 au 03/12/2026', v_c2: 'Du 28/02/2027 au 04/03/2027',
       v_c3: 'Du 16/05/2027 au 20/05/2027', v_bac: 'Baccalauréat blanc : mars 2027',
-      sem_1_date: '12/10/2026', sem_1_theme: 'L\'approche par compétences en 3AS',
+      sem_1_date: '12/10/2026', sem_1_theme: 'L\'approche par compétences et l\'exploitation du texte d\'histoire en 3AS',
       sem_1_org: 'Inspection de la circonscription', sem_1_lieu: 'Lycée H. Ben Bouali', sem_1_duree: '1 journée',
-      sem_1_pts: 'Exploitation didactique de l\'archive. Compte rendu objectif.',
-      sem_1_reinv: 'Grille de compte rendu appliquée en 3AS.',
-      jp_1_date: '05/10/2026', jp_1_lieu: 'Lycée Ibn Khaldoun', jp_1_theme: 'Harmonisation des barèmes',
+      sem_1_pts: 'Exploitation didactique de l\'archive. Formulation d\'objectifs opérationnels. Compte rendu objectif.',
+      sem_1_reinv: 'Grille de compte rendu appliquée en 3AS dès la séquence 1.',
+      jp_1_date: '05/10/2026', jp_1_lieu: 'Lycée Ibn Khaldoun', jp_1_theme: 'Harmonisation des progressions et du barème de la production écrite',
       w_classe: '3AS SE · 2AS L&Ph', w_periode: 'Semaine du 20 au 24/09/2026', w_trim: '1er trimestre',
       w_1_date: '20/09/2026', w_1_classe: '3AS SE', w_1_heure: '08:00 - 09:00',
-      w_1_travail: 'Évaluation diagnostique : texte informatif.', w_1_obs: 'Acquis satisfaisants.',
+      w_1_travail: 'Évaluation diagnostique : lecture d\'un texte informatif à visée explicative.', w_1_obs: 'Acquis satisfaisants.',
       w_2_date: '20/09/2026', w_2_classe: '2AS L&Ph', w_2_heure: '09:00 - 10:00',
-      w_2_travail: 'Projet 1 / séquence 1 : compréhension de l\'oral.', w_2_obs: 'Participation active.',
+      w_2_travail: 'Projet 1 / séquence 1 : lancement — compréhension de l\'oral (discours exhortatif).', w_2_obs: 'Participation active.',
       l_classe: '3AS SE 1', l_niveau: '3AS Sciences expérimentales', l_eff: '35', l_annee: '2026 - 2027',
       l_trim: '1er trimestre', l_del: 'AMRANI Yacine', l_g: '16', l_f: '19', l_moy: '12,45',
       el_1_nom: 'AMRANI Yacine', el_1_naiss: '12/03/2009', el_1_sexe: 'M',
@@ -2109,54 +2278,54 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
       el_2_nom: 'BELKACEM Lina', el_2_naiss: '05/07/2009', el_2_sexe: 'F',
       el_2_ec: '15', el_2_tp: '16', el_2_dev: '14,5', el_2_compo: '15,5',
       f_num: '01', f_date: '22/09/2026', f_classe: '3AS Sciences expérimentales', f_duree: '1 h',
-      f_projet: 'Projet 1 : dossier documentaire sur un fait d\'histoire.',
+      f_projet: 'Projet 1 : réaliser un dossier documentaire pour informer d\'un fait d\'histoire.',
       f_sequence: 'Séquence 1 : informer d\'un fait d\'histoire.', f_objet: 'Le texte d\'histoire',
-      f_comp: 'Comprendre et analyser un texte d\'histoire.',
-      f_savoir: 'Structure du texte d\'histoire.',
-      f_sf: 'Repérer les marques de l\'objectivité.',
-      f_se: 'Esprit critique.',
+      f_comp: 'Comprendre et analyser un texte d\'histoire pour en restituer l\'essentiel.',
+      f_savoir: 'La structure et la visée informative du texte d\'histoire.',
+      f_sf: 'Repérer les marques de l\'objectivité et distinguer le fait du témoignage.',
+      f_se: 'Développer un esprit critique face aux sources historiques.',
       f_s_page: '14-16',
-      f_cr1: 'L\'élève identifie la visée informative.',
-      f_cr2: 'L\'élève distingue le fait du témoignage.',
-      f_cr3: 'L\'élève reformule l\'idée générale.',
-      f_diff: 'Guidage de la lecture pour les élèves en difficulté.',
-      f_bilan: 'Bonne participation.',
-      ph_0_act: 'Observation de l\'image d\'archive.',
-      ph_1_act: 'Lecture silencieuse puis magistrale.',
-      ph_2_act: 'Analyse des faits / commentaires.',
-      ph_3_act: 'Trace écrite.',
-      ph_4_act: 'Question de synthèse.',
+      f_cr1: 'L\'élève identifie la visée informative du texte.',
+      f_cr2: 'L\'élève distingue le fait historique du témoignage.',
+      f_cr3: 'L\'élève reformule l\'idée générale en une phrase correcte.',
+      f_diff: 'Guidage de la lecture silencieuse pour les élèves en difficulté ; recherche complémentaire pour les plus avancés.',
+      f_bilan: 'Bonne participation ; la distinction fait / témoignage demande une séance de consolidation.',
+      ph_0_act: 'Observation de l\'image d\'archive et de la date pour formuler des hypothèses de sens.',
+      ph_1_act: 'Lecture silencieuse puis magistrale ; repérage des indicateurs de temps et des acteurs.',
+      ph_2_act: 'Analyse des paragraphes : faits historiques / commentaires de l\'auteur.',
+      ph_3_act: 'Élaboration collective du plan du texte et prise de notes.',
+      ph_4_act: 'Question de synthèse écrite : restituer l\'essentiel en trois phrases.',
       p_semaine: '20 au 24 septembre 2026', p_trim: '1er trimestre',
-      p_projet: 'Projet 1 : dossier documentaire.',
+      p_projet: 'Projet 1 : dossier documentaire sur un fait d\'histoire.',
       p_seq: 'Séquence 1 : informer d\'un fait d\'histoire.',
-      p_obj: 'Restituer l\'essentiel d\'un texte d\'histoire.',
+      p_obj: 'Restituer l\'essentiel d\'un texte d\'histoire sous forme de compte rendu objectif.',
       pn_1_jour: 'Dim. 20/09', pn_1_classe: '3AS SE', pn_1_act: 'Évaluation diagnostique',
-      pn_1_contenu: 'Texte informatif — manuel p. 12', pn_1_devoir: 'Lexique de l\'histoire',
+      pn_1_contenu: 'Texte informatif à visée explicative — manuel p. 12', pn_1_devoir: 'Relever le lexique de l\'histoire',
       pn_2_jour: 'Mar. 22/09', pn_2_classe: '3AS SE', pn_2_act: 'Compréhension de l\'écrit',
-      pn_2_contenu: 'Le texte d\'histoire', pn_2_devoir: 'Plan du texte',
-      p_bilan: 'Séquence 1 lancée.',
-      p_report: 'Rattrapage prévu.',
+      pn_2_contenu: 'Le texte d\'histoire — extrait d\'ouvrage historique', pn_2_devoir: 'Plan du texte à recopier',
+      p_bilan: 'Séquence 1 lancée dans les trois niveaux ; compréhension de l\'oral reportée en 1AS.',
+      p_report: 'Séance de points de langue (1AS) à rattraper le mercredi 30/09.',
       ev_classe: '3AS SE 1', ev_niveau: '3AS Sciences expérimentales', ev_trim: '1er trimestre', ev_annee: '2026 - 2027',
-      ev_projet: 'Projet 1 / séquence 1.',
+      ev_projet: 'Projet 1 / séquence 1 : informer d\'un fait d\'histoire.',
       ev_periode: 'Du 20/09 au 30/10/2026',
       ev_1_nom: 'AMRANI Yacine', ev_1_part: '13', ev_1_dev: '12', ev_1_exo: '14', ev_1_int: '12,5', ev_1_cah: '15', ev_1_com: '16',
-      ev_1_obs: 'Prend la parole plus souvent.',
+      ev_1_obs: 'Prend la parole plus souvent ; devoirs à rendre à temps.',
       ev_2_nom: 'BELKACEM Lina', ev_2_part: '16', ev_2_dev: '15', ev_2_exo: '15,5', ev_2_int: '15', ev_2_cah: '17', ev_2_com: '18',
-      ev_2_obs: 'Progrès nets.',
-      ev_moy_cl: '12,80', ev_sup: '22 / 35', ev_rem: 'Atelier de compte rendu.',
+      ev_2_obs: 'Progrès nets à l\'oral ; cahier très soigné.',
+      ev_moy_cl: '12,80', ev_sup: '22 / 35', ev_rem: 'Atelier de compte rendu, mercredi 8 h - 9 h.',
       cc_classe: '3AS SE 1', cc_niveau: '3AS Sciences expérimentales', cc_eff: '35', cc_trim: '1er trimestre',
       cc_date: '07/12/2026', cc_heure: '14:00 - 16:00', cc_lieu: 'Salle des professeurs',
       cc_pres: 'M. HAMDI Rachid', cc_pp: 'Mme BENALI Souad',
-      cc_ordre: 'Bilan du 1er trimestre.',
+      cc_ordre: 'Bilan du 1er trimestre, résultats par matière, décisions et mesures de remédiation.',
       cc_m_0_nom: 'M. HAMDI Rachid', cc_m_1_nom: 'Mme ZERROUKI Amel', cc_m_2_nom: 'Mme BENALI Souad',
       cc_m_3_nom: 'Mme BENALI Souad', cc_m_4_nom: 'AMRANI Yacine', cc_m_5_nom: 'M. TALEB Djamel',
-      cc_m_4_obs: 'Remarques des élèves.',
+      cc_m_4_obs: 'Signale la surcharge des devoirs le lundi.',
       cc_moy: '12,45', cc_max: '17,25', cc_min: '06,50', cc_sup: '23', cc_inf: '12', cc_taux: '65,7 %',
       cc_d_0_eleves: 'BELKACEM Lina, MEZIANE Sarah', cc_d_0_nb: '02',
-      cc_d_1_eleves: 'AMRANI Yacine, HADDAD Rym', cc_d_1_nb: '02',
+      cc_d_1_eleves: 'AMRANI Yacine, HADDAD Rym, SAHLI Nour', cc_d_1_nb: '03',
       cc_d_3_eleves: 'BOUZID Karim', cc_d_3_nb: '01',
-      cc_diff: 'Compte rendu proche de la paraphrase.',
-      cc_reco: 'Remédiation le mercredi.'
+      cc_diff: 'Lexique de l\'histoire mal maîtrisé ; compte rendu objectif encore proche de la paraphrase.',
+      cc_reco: 'Séances de remédiation le mercredi, contrat de travail individuel pour les élèves sous la moyenne, information des parents.'
     };
     Object.keys(m).forEach(function (k) { setVal(k, m[k]); });
     recalcAll();
@@ -2171,7 +2340,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     document.querySelectorAll('[data-role="moy"]').forEach(function (el) {
       var tr = el.closest('tr'); if (tr) computeRow(tr);
     });
-    document.querySelectorAll('[data-ev="moy"]').forEach(function (el) {
+    document.querySelectorAll('[data-role="ev-moy"]').forEach(function (el) {
       var tr = el.closest('tr'); if (tr) computeEvalRow(tr);
     });
   }
@@ -2184,6 +2353,5 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   window.addEventListener('beforeprint', markFirst);
 })();
 </script>
-</div> <!-- Fin de zone-protegee -->
 </body>
 </html>
