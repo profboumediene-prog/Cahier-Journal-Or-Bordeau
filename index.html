@@ -10,13 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&family=Parisienne&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" defer></script>
 
-<!-- SDK Firebase Compat -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-<script>
   const firebaseConfig = {
-    apiKey: "AiZaSyCES9EcIK8B5S5Ba5t-8ige1UiPR2Uev_T0",
+    apiKey: "AIzaSyCEs9ECiK8B5sBa5t-8ige1UipR2UeV_T0",
     authDomain: "cahier-journal-26-27.firebaseapp.com",
     projectId: "cahier-journal-26-27",
     storageBucket: "cahier-journal-26-27.firebasestorage.app",
@@ -24,22 +23,21 @@
     appId: "1:640606456487:web:8444d7761c7cc15519a982",
     measurementId: "G-QVFVEP32NS"
   };
-  
-  firebase.initializeApp(firebaseConfig);
 
-  // Vérification de la session utilisateur
-  firebase.auth().onAuthStateChanged((user) => {
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       document.getElementById('zone-protegee').style.display = 'block';
       document.getElementById('zone-connexion').style.display = 'none';
     } else {
       document.getElementById('zone-protegee').style.display = 'none';
-      document.getElementById('zone-connexion').style.display = 'block';
+      document.getElementById('zone-connexion').style.display = 'flex';
     }
   });
 
-  // Fonction de connexion avec E-mail et Code d'accès
-  function connexionFirebase() {
+  window.connexionFirebase = function() {
     const email = document.getElementById('user-email').value;
     const code = document.getElementById('user-code').value;
     const errorElement = document.getElementById('error-message');
@@ -50,21 +48,17 @@
       return;
     }
 
-    firebase.auth().signInWithEmailAndPassword(email, code)
-      .then((userCredential) => {
-        // Connexion réussie
-      })
+    signInWithEmailAndPassword(auth, email, code)
       .catch((error) => {
         errorElement.innerText = "Adresse e-mail ou code d'accès incorrect.";
       });
-  }
+  };
 
-  // Fonction de déconnexion
-  function deconnexionFirebase() {
-    firebase.auth().signOut().then(() => {
+  window.deconnexionFirebase = function() {
+    signOut(auth).then(() => {
       window.location.reload();
     });
-  }
+  };
 </script>
 
 <style>
@@ -87,7 +81,7 @@
   border-radius: 20px;
   padding: 45px 40px;
   width: 100%;
-  max-width: 520px; /* Interface plus large */
+  max-width: 520px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
@@ -121,7 +115,7 @@
 
 .form-group-large input {
   width: 100%;
-  padding: 14px 16px; /* Champs plus grands */
+  padding: 14px 16px;
   font-size: 16px;
   border: 1.5px solid #e6d3d6;
   border-radius: 12px;
@@ -178,25 +172,25 @@
    ===================================================================== */
 
 :root{
-  --ink:#2a1619;       /* Noir bordeaux très sombre pour le texte */
-  --v900:#42151e;      /* Bordeaux le plus profond */
-  --v800:#591b28;      /* Bordeaux sombre */
-  --v700:#732233;      /* Bordeaux riche / brique soutenue */
-  --v600:#8c293e;      /* Bordeaux moyen (accents, boutons, italiques) */
-  --v500:#a33b52;      /* Bordeaux clair */
-  --v400:#c2697e;      /* Rose bordeaux atténué */
-  --v300:#d99aa9;      /* Rose bordeaux clair (pointillés) */
-  --v200:#eecad3;      /* Crème rosé (bordures douces) */
-  --v100:#f6e1e6;      /* Crème bordeaux (fonds tableaux) */
-  --v50:#fcf4f5;       /* Blanc cassé très légèrement rosé */
-  --gold:#d4af37;      /* Or lumineux / ambre */
-  --gold-soft:#ebd69b; /* Or doux / ambre clair */
-  --rose:#a8485c;      /* Rouge brique/rose (accents secondaires) */
+  --ink:#2a1619;
+  --v900:#42151e;
+  --v800:#591b28;
+  --v700:#732233;
+  --v600:#8c293e;
+  --v500:#a33b52;
+  --v400:#c2697e;
+  --v300:#d99aa9;
+  --v200:#eecad3;
+  --v100:#f6e1e6;
+  --v50:#fcf4f5;
+  --gold:#d4af37;
+  --gold-soft:#ebd69b;
+  --rose:#a8485c;
   --rose-soft:#f2dadd;
-  --sage:#a8a07c;      /* Or vieilli / bronze */
-  --muted:#705e61;     /* Gris brun chaud (textes secondaires) */
+  --sage:#a8a07c;
+  --muted:#705e61;
   --line:#e6d3d6;
-  --paper:#fffffb;     /* Blanc cassé / crème pour la feuille A4 */
+  --paper:#fffffb;
 
   --display:"Cormorant Garamond","Times New Roman",serif;
   --body:"Manrope","Segoe UI",system-ui,sans-serif;
@@ -213,7 +207,7 @@ body{
   color:var(--ink);
   background:
     radial-gradient(1200px 600px at 50% -10%, #591b28 0%, transparent 60%),
-    #1a060a; /* Fond d'écran riche, coloré et immersif aux tons bordeaux sombres */
+    #1a060a;
   -webkit-print-color-adjust:exact;
   print-color-adjust:exact;
   padding:18px 0 40px;
@@ -221,7 +215,6 @@ body{
 h1,h2,h3,h4{margin:0}
 p{margin:0}
 
-/* ------------------------- BARRE D'OUTILS ------------------------- */
 .toolbar{
   max-width:210mm;margin:0 auto 22px;padding:14px 16px;
   background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
@@ -261,7 +254,6 @@ p{margin:0}
 .hint{font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5}
 .hint b{color:var(--v700)}
 
-/* ------------------------------ FEUILLE A4 ------------------------------ */
 .sheet{
   width:210mm;height:297mm;padding:var(--pad-y) var(--pad-x) 8mm;
   background:var(--paper);position:relative;overflow:hidden;
@@ -273,7 +265,6 @@ p{margin:0}
 }
 .sheet.hidden{display:none}
 
-/* Filet décoratif de page */
 .sheet::before{
   content:"";position:absolute;inset:5mm;border:1px solid var(--v100);border-radius:8px;pointer-events:none;
 }
@@ -283,7 +274,6 @@ p{margin:0}
 }
 .sheet > *{position:relative;z-index:1}
 
-/* ------------------------------ EN-TÊTES ------------------------------ */
 .head{text-align:center;margin-bottom:5mm}
 .head__eyebrow{font-size:7.5pt;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--v400)}
 .head h2{font-family:var(--display);font-size:23pt;font-weight:700;color:var(--v900);line-height:1.05;margin-top:1.5mm}
@@ -294,7 +284,6 @@ p{margin:0}
 .rule span:last-of-type{background:linear-gradient(270deg,transparent,var(--v300))}
 .rule b{width:5px;height:5px;transform:rotate(45deg);background:var(--gold);display:block}
 
-/* ------------------------------ CARTES ------------------------------ */
 .card{
   position:relative;border:1px solid var(--v200);border-radius:11px;background:linear-gradient(180deg,var(--paper), #fdfbfa);
   padding:6.5mm 4.5mm 4mm;
@@ -307,7 +296,6 @@ p{margin:0}
   padding:3px 10px;border-radius:999px;box-shadow:0 4px 8px -5px var(--v700)}
 .card__label span{opacity:.7;font-weight:700}
 
-/* ------------------------------ GRILLE ------------------------------ */
 .grid{display:grid;gap:4mm}
 .g2{grid-template-columns:repeat(2,1fr)}
 .g3{grid-template-columns:repeat(3,1fr)}
@@ -318,7 +306,6 @@ p{margin:0}
 .span2{grid-column:span 2}
 .span3{grid-column:span 3}
 
-/* ------------------------------ CHAMPS ------------------------------ */
 .field{display:flex;align-items:baseline;gap:5px;min-width:0}
 .field > label{font-size:8.5pt;font-weight:700;color:var(--v800);white-space:nowrap}
 .field--stack{display:block}
@@ -340,7 +327,6 @@ p{margin:0}
 .chk--block{display:flex}
 .chks{display:flex;flex-wrap:wrap;gap:3px 10px}
 
-/* ------------------------------ TABLEAUX ------------------------------ */
 .tbl-wrap{border:1px solid var(--v200);border-radius:11px;overflow:hidden;background:var(--paper)}
 table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .tbl thead th{
@@ -360,7 +346,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .pause td{background:repeating-linear-gradient(135deg,var(--v50),var(--v50) 6px,var(--paper) 6px,var(--paper) 12px);
   text-align:center;font-size:7.5pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--v400)}
 
-/* Tableau dense (liste des élèves) */
 .tbl--dense tbody td{padding:.4mm .6mm}
 .tbl--dense thead th{
   padding:1.3mm .8mm;font-size:6.4pt;font-weight:500;letter-spacing:.01em;
@@ -370,7 +355,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .tbl--dense .line{padding:0 2px;line-height:1.25}
 .line--moy{font-weight:800;color:var(--v700)}
 
-/* Grille façon « planner » (page emploi du temps hebdomadaire) */
 .planner td{padding:1.2mm}
 .planner .cell{
   border:1px solid var(--v200);border-radius:6px;background:var(--paper);height:100%;width:100%;
@@ -381,7 +365,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
   background:linear-gradient(180deg,var(--v600),var(--v800));color:#fff;border-radius:6px;
   font-size:7.5pt;font-weight:800;letter-spacing:.06em;text-align:center;padding:1mm .5mm;line-height:1.15}
 
-/* ------------------------------ PASTILLES ------------------------------ */
 .chips{display:flex;flex-wrap:wrap;gap:2mm}
 .chip{
   display:inline-flex;align-items:center;gap:5px;padding:1.6mm 3mm;border-radius:999px;
@@ -393,18 +376,15 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .chip--rose b{color:var(--rose)}
 .chip small{font-weight:600;color:var(--muted)}
 
-/* ------------------------------ SIGNATURES ------------------------------ */
 .signs{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm;margin-top:auto;padding-top:4mm}
 .sign{text-align:center}
 .sign p{font-size:8.5pt;font-weight:700;color:var(--v800);margin-bottom:1mm}
 .sign div{height:13mm;border-bottom:1px dotted var(--v300)}
 
-/* Neutralisation du style « tableau » dans le planner */
 .planner tbody td{border:0;padding:0}
 .planner tbody tr{background:transparent!important}
 .planner thead th{border-right:0}
 
-/* ------------------------------ PIED DE PAGE ------------------------------ */
 .foot{
   margin-top:auto;padding-top:2.5mm;border-top:1px solid var(--v100);
   display:flex;justify-content:space-between;align-items:center;
@@ -413,7 +393,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .pushtop{margin-top:auto}
 .signs + .foot,.pushtop + .foot{margin-top:4mm}
 
-/* ------------------------------ PAGE DE GARDE ------------------------------ */
 .cover{
   background:
     radial-gradient(70% 45% at 50% 0%, #faeed1 0%, transparent 65%),
@@ -445,13 +424,12 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .cover__year{
   margin-top:4mm;display:inline-block;padding:2.5mm 7mm;border-radius:10px;
   background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;font-size:10pt;font-weight:700;letter-spacing:.06em}
-.cover__year span{display:inline-block;vertical-align:middle;margin-right:9px}
+.cover__year span{display:inline-block;vertical-align:middle;margin-right:99px}
 .cover__year input{width:34mm;display:inline-block;vertical-align:middle;
   background:transparent;border:0;border-bottom:1px dotted rgba(255,255,255,.6);
   color:#fff;font:800 12pt var(--body);text-align:center;outline:none}
 .cover__quote{font-family:var(--display);font-style:italic;font-size:11pt;color:var(--v600)}
 
-/* ------------------------------ DIVERS ------------------------------ */
 .note{font-size:7.5pt;color:var(--muted);line-height:1.45}
 .legend{display:flex;flex-wrap:wrap;gap:2mm 4mm;font-size:7.5pt;color:var(--muted);font-weight:600}
 .legend b{color:var(--v700)}
@@ -467,7 +445,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
   transition:opacity .22s ease,transform .22s ease;z-index:99;pointer-events:none}
 .toast.is-on{opacity:1;transform:translate(-50%,0)}
 
-/* ---------------- PAGE MENSUELLE : CALENDRIER & TÂCHES ---------------- */
 .cal-ctrl{
   display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px;margin-bottom:3.5mm;
   padding:2mm 3.5mm;border:1px dashed var(--v200);border-radius:8px;background:var(--v50)}
@@ -498,10 +475,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 .task input[type="checkbox"]{width:12px;height:12px;flex:none;margin:0;accent-color:var(--v600);cursor:pointer}
 .task .line{border-bottom-style:dotted}
 
-/* ------------------------ ORNEMENTS ------------------------
-   Papillons discrets : dessins vectoriels posés SOUS le contenu (z-index 0)
-   pour ne jamais gêner l'écriture.
-   ------------------------------------------------------------------ */
 .sheet > .orn{position:absolute;z-index:0;pointer-events:none;display:block}
 .orn--fly1{width:13mm;height:9.8mm;top:15mm;right:14mm;opacity:.95}
 .orn--fly2{width:10mm;height:7.5mm;bottom:17mm;left:11mm;opacity:.85;transform:scaleX(-1)}
@@ -510,7 +483,6 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
-/* ------------------------------ IMPRESSION ------------------------------ */
 @page{size:A4 portrait;margin:0}
 @media print{
   html,body{background:#fff!important;padding:0!important;margin:0!important}
@@ -525,14 +497,12 @@ table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
   .line,.area,.cell{background-color:transparent!important}
   .line:focus,.area:focus{background:transparent!important}
 }
-/* ------------------------------ EXPORT PDF ------------------------------ */
 body.exporting{padding:0!important;background:#fff!important}
 body.exporting .no-print{display:none!important}
 body.exporting .sheet{
   margin:0!important;border-radius:0!important;box-shadow:none!important;
   page-break-before:always;break-before:page;page-break-inside:avoid;break-inside:avoid}
 body.exporting .line,body.exporting .area,body.exporting .cell{background-color:transparent!important}
-/* Repli : aucun dégradé, uniquement des aplats — capture toujours possible */
 body.exporting-flat *,body.exporting-flat *::before,body.exporting-flat *::after{background-image:none!important}
 body.exporting-flat .tbl thead th,body.exporting-flat .card__label,
 body.exporting-flat .cover__year,body.exporting-flat .planner .vslot{background-color:#732233!important;color:#fff!important}
@@ -545,7 +515,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
 </head>
 <body>
 
-<!-- ===================== ZONE DE CONNEXION FIREBASE ===================== -->
 <div id="zone-connexion">
   <div class="login-card-large">
     <h2>Cahier Journal 2026-2027</h2>
@@ -566,10 +535,8 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   </div>
 </div>
 
-<!-- ===================== CONTENU DU CAHIER JOURNAL ===================== -->
 <div id="zone-protegee" style="display:none;">
 
-<!-- ===================== BARRE D'OUTILS (non imprimée) ===================== -->
 <header class="toolbar no-print">
   <div class="toolbar__top">
     <div class="brand">
@@ -615,7 +582,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
 
 <main id="cahier">
 
-<!-- ============================== PAGE 0 · GARDE ============================== -->
 <section class="sheet cover" id="page-0" data-page="0" aria-label="Page de garde">
   <div class="cover__frame" aria-hidden="true"></div>
 
@@ -678,7 +644,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   </div>
 </section>
 
-<!-- ======================== PAGE 1 · INFORMATIONS ======================== -->
 <section class="sheet hidden" id="page-1" data-page="1" aria-label="Informations personnelles et professionnelles">
   <header class="head">
     <p class="head__eyebrow">Fiche d'identité de l'enseignant(e)</p>
@@ -747,7 +712,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Informations</span><span>01</span></footer>
 </section>
 
-<!-- ==================== PAGE 2 · MON EMPLOI DU TEMPS ==================== -->
 <section class="sheet hidden" id="page-2" data-page="2" aria-label="Mon emploi du temps">
   <header class="head">
     <p class="head__eyebrow">Organisation hebdomadaire</p>
@@ -794,7 +758,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Emploi du temps</span><span>02</span></footer>
 </section>
 
-<!-- ==================== PAGE 3 · TABLEAU D'EMPLOI DU TEMPS ==================== -->
 <section class="sheet hidden" id="page-3" data-page="3" aria-label="Tableau d'emploi du temps">
   <header class="head">
     <p class="head__eyebrow">Répartition par créneau horaire</p>
@@ -833,7 +796,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Tableau horaire</span><span>03</span></footer>
 </section>
 
-<!-- ============ PAGE 4 · EMPLOI DU TEMPS HEBDOMADAIRE (PLANNER) ============ -->
 <section class="sheet hidden" id="page-4" data-page="4" aria-label="Emploi du temps hebdomadaire">
   <header class="head">
     <p class="head__eyebrow">Vue d'ensemble de la semaine</p>
@@ -861,7 +823,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Semaine type</span><span>04</span></footer>
 </section>
 
-<!-- ============ PAGE 5 · VACANCES, JOURS FÉRIÉS & COMPOSITIONS ============ -->
 <section class="sheet hidden" id="page-5" data-page="5" aria-label="Vacances, jours fériés et compositions">
   <header class="head">
     <p class="head__eyebrow">Calendrier officiel de l'année</p>
@@ -914,7 +875,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Calendrier</span><span>05</span></footer>
 </section>
 
-<!-- ============ PAGE 6 · SÉMINAIRES & JOURNÉES PÉDAGOGIQUES ============ -->
 <section class="sheet hidden" id="page-6" data-page="6" aria-label="Séminaires et journées pédagogiques">
   <header class="head">
     <p class="head__eyebrow">Formation continue</p>
@@ -945,7 +905,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Formation continue</span><span>06</span></footer>
 </section>
 
-<!-- ============ PAGE 7 · CAHIER DE TEXTES / TRAVAIL À EFFECTUER ============ -->
 <section class="sheet hidden" id="page-7" data-page="7" aria-label="Travail à effectuer">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -975,7 +934,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Cahier de textes</span><span>07</span></footer>
 </section>
 
-<!-- ==================== PAGE 8 · LISTE DES ÉLÈVES ==================== -->
 <section class="sheet hidden" id="page-8" data-page="8" aria-label="Liste des élèves">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -1026,7 +984,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Liste des élèves</span><span>08</span></footer>
 </section>
 
-<!-- ==================== PAGE 9 · FICHE DE PRÉPARATION (SÉANCE) ==================== -->
 <section class="sheet hidden" id="page-9" data-page="9" aria-label="Fiche de préparation d'une séance">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -1155,7 +1112,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Fiche de séance</span><span>09</span></footer>
 </section>
 
-<!-- ==================== PAGE 10 · PLANIFICATION HEBDOMADAIRE ==================== -->
 <section class="sheet hidden" id="page-10" data-page="10" aria-label="Planification hebdomadaire">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -1213,7 +1169,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Planification</span><span>10</span></footer>
 </section>
 
-<!-- ==================== PAGE 11 · ÉVALUATION CONTINUE ==================== -->
 <section class="sheet hidden" id="page-11" data-page="11" aria-label="Évaluation continue">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -1275,7 +1230,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Évaluation continue</span><span>11</span></footer>
 </section>
 
-<!-- ==================== PAGE 12 · CONSEIL DE CLASSE ==================== -->
 <section class="sheet hidden" id="page-12" data-page="12" aria-label="Réunion du conseil de classe">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -1352,7 +1306,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   <footer class="foot"><span>Cahier journal · Français</span><span>Conseil de classe</span><span>12</span></footer>
 </section>
 
-<!-- ==================== PAGE 13 · CALENDRIER MENSUEL & TÂCHES ==================== -->
 <section class="sheet hidden" id="page-13" data-page="13" aria-label="Calendrier mensuel et tâches">
   <div class="sheet-tools no-print">
     <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
@@ -1405,19 +1358,9 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* =====================================================================
-   Cahier journal — logique de l'application
-   1. Construction des tableaux répétitifs
-   2. Navigation entre les pages
-   3. Sauvegarde locale (avec repli en mémoire si le stockage est bloqué)
-   4. Impression A4 / export PDF
-   5. Duplication de page
-   6. Papillons discrets (ornements)
-   ===================================================================== */
 (function () {
   'use strict';
 
-  /* ---------- fabriques d'éléments ---------- */
   function input(id, cls, val) {
     var e = document.createElement('input');
     e.type = 'text'; e.className = 'line' + (cls ? ' ' + cls : ''); e.id = id;
@@ -1459,10 +1402,8 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
   }
   function byId(id) { return document.getElementById(id); }
 
-  /* ---------- 1. tableaux ---------- */
   var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi'];
 
-  // Page 2 — grille jours x créneaux
   (function () {
     var tb = byId('edt-body'); if (!tb) return;
     DAYS.forEach(function (d, i) {
@@ -1472,7 +1413,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
-  // Page 3 — créneaux en lignes
   (function () {
     var tb = byId('tab-body'); if (!tb) return;
     var slots = ['08:00|09:00', '09:00|10:00', '10:00|11:00', '11:00|12:00', '13:00|14:00', '14:00|15:00', '15:00|16:00'];
@@ -1491,7 +1431,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
-  // Page 4 — planner hebdomadaire
   (function () {
     var tb = byId('planner-body'); if (!tb) return;
     var slots = ['8h - 9h', '9h - 10h', '10h - 11h', '11h - 12h', '13h - 14h', '14h - 15h', '15h - 16h', '16h - 17h'];
@@ -1514,7 +1453,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  // Page 5 — vacances / jours fériés
   (function () {
     var tb = byId('vac-body'); if (!tb) return;
     ['Vacances d\'automne', 'Vacances d\'hiver', 'Vacances de printemps', 'Vacances d\'été'].forEach(function (v, i) {
@@ -1534,7 +1472,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  // Page 6 — séminaires / journées pédagogiques
   (function () {
     var tb = byId('sem-body'); if (!tb) return;
     for (var i = 1; i <= 4; i++) {
@@ -1556,7 +1493,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  // Page 7 — cahier de textes
   (function () {
     var tb = byId('work-body'); if (!tb) return;
     for (var i = 1; i <= 12; i++) {
@@ -1569,7 +1505,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  // Page 8 — liste des élèves (36 lignes, moyenne calculée)
   (function () {
     var tb = byId('students-body'); if (!tb) return;
     for (var i = 1; i <= 36; i++) {
@@ -1593,7 +1528,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  /* ---------- moyenne trimestrielle & appréciation ---------- */
   var COEFS = { ec: 1, tp: 1, dev: 1, compo: 2 };
 
   function toNumber(v) {
@@ -1639,7 +1573,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     if (tr) computeRow(tr);
   });
 
-  // Page 9 — déroulement de la séance
   (function () {
     var tb = byId('phases-body'); if (!tb) return;
     var phases = [
@@ -1671,7 +1604,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
-  // Page 10 — planification hebdomadaire
   (function () {
     var tb = byId('plan-body'); if (!tb) return;
     for (var i = 1; i <= 10; i++) {
@@ -1684,7 +1616,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  // Page 11 — évaluation continue (28 lignes, note continue calculée)
   var EV_ROLES = ['part', 'dev', 'exo', 'int', 'cah', 'com'];
   (function () {
     var tb = byId('eval-body'); if (!tb) return;
@@ -1705,7 +1636,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   })();
 
-  /* ---------- note d'évaluation continue ---------- */
   var EV_COEFS = { part: 1, dev: 1, exo: 1, int: 2, cah: 1, com: 1 };
 
   function computeEvalRow(tr) {
@@ -1730,7 +1660,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     if (tr) computeEvalRow(tr);
   });
 
-  // Page 12 — conseil de classe
   (function () {
     var tb = byId('cc-body'); if (!tb) return;
     var membres = [
@@ -1766,7 +1695,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   })();
 
-  // Page 13 — calendrier du mois & tâches
   var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
               'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 
@@ -1846,7 +1774,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     }
   });
 
-  /* ---------- 2. navigation ---------- */
   var current = 0;
   window.showPage = function (n) {
     current = n;
@@ -1859,7 +1786,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  /* ---------- 3. sauvegarde ---------- */
   var KEY = 'cahier_journal_fr_v1';
   var memory = null;
   function readStore() {
@@ -1920,7 +1846,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT') window.saveAll(true);
   });
 
-  /* ---------- 4. impression ---------- */
   function markFirst() {
     var sheets = document.querySelectorAll('.sheet');
     sheets.forEach(function (s) { s.classList.remove('is-first'); });
@@ -1933,7 +1858,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     setTimeout(function () { markFirst(); window.print(); }, 250);
   };
 
-  /* ---------- 4 bis. export PDF ---------- */
   function syncFields(root) {
     root.querySelectorAll('textarea').forEach(function (t) { t.textContent = t.value; });
     root.querySelectorAll('input[type="text"], input[type="email"]').forEach(function (i) {
@@ -2166,7 +2090,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   }
 
-  /* ---------- 5. duplication de page ---------- */
   var clones = 0;
   window.duplicatePage = function (btn) {
     var src = btn.closest('.sheet');
@@ -2197,7 +2120,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     toast('Page supprimée.');
   };
 
-  /* ---------- notifications ---------- */
   var toastTimer = null;
   function toast(msg, longue) {
     var t = byId('toast');
@@ -2207,7 +2129,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     toastTimer = setTimeout(function () { t.classList.remove('is-on'); }, longue ? 9000 : 2600);
   }
 
-  /* ---------- 6. papillons (ornements) ---------- */
   var C = {
     heart: '#f0c755', heartLine: '#9c730f',
     wing: '#ffffff', wing2: '#f6e1e6', wingLine: '#732233'
@@ -2234,7 +2155,6 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
     });
   }
 
-  /* ---------- exemple de remplissage ---------- */
   window.fillModel = function () {
     var m = {
       c_ens: 'Mme BENALI Souad', c_etab: 'Lycée Ibn Khaldoun', c_com: 'El Biar', c_wil: 'Alger',
@@ -2283,7 +2203,7 @@ body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!impor
       f_comp: 'Comprendre et analyser un texte d\'histoire pour en restituer l\'essentiel.',
       f_savoir: 'La structure et la visée informative du texte d\'histoire.',
       f_sf: 'Repérer les marques de l\'objectivité et distinguer le fait du témoignage.',
-      f_se: 'Développer un esprit critique face aux sources historiques.',
+      f_se: 'Développer un esprit critical face aux sources historiques.',
       f_s_page: '14-16',
       f_cr1: 'L\'élève identifie la visée informative du texte.',
       f_cr2: 'L\'élève distingue le fait historique du témoignage.',
